@@ -63,6 +63,16 @@ describe('simple tests',
                  value_of(find(insert(EMPTY, 0), 0)).should_be(0);
              },
 
+             'inserting repeatedly should be fine': function() {
+                 var t = insert(EMPTY, 0);
+                 t = insert(EMPTY, 0);
+                 t = insert(EMPTY, 0);
+                 t = insert(EMPTY, 0);
+                 t = insert(EMPTY, 0);
+                 value_of(find(t, 0)).should_be(0);
+                 value_of(find(t, 1)).should_be(undefined);
+             },
+
              'insert single element, search failing': function() {
                  value_of(find(insert(EMPTY, 0), 1)).should_be(undefined);
              },
@@ -108,17 +118,23 @@ describe('simple tests',
                  var i;
                  var iterations;
                  var tree;
-                 var BIG = 100000;
-                 for (i = 0; i < BIG; i++) {
-                     a[i] = i;
-                 }
-                 for (iterations = 0; iterations < 10; iterations++) {
-                     shuffle(a);
-                     tree = insertMany(EMPTY, a);
-                     for (i = 0; i < a.length; i++) {
-                         value_of(find(tree, a[i])).should_be(a[i]);
+                 var BIG;
+                 for (BIG = 1; BIG <= 100000; BIG = BIG * 10) {
+                     for (i = 0; i < BIG; i++) {
+                         a[i] = i;
                      }
-                 } 
+                     var startTime = new Date();
+                     for (iterations = 0; iterations < 1; iterations++) {
+                         shuffle(a);
+
+                         tree = insertMany(EMPTY, a);
+                         for (i = 0; i < a.length; i++) {
+                             value_of(find(tree, a[i])).should_be(a[i]);
+                         }
+                     } 
+                     var stopTime = new Date();
+                     console.log(BIG, stopTime-startTime);
+                 }
              }
          });
 
