@@ -71,11 +71,8 @@ var numcmp = function(x, y) {
 };
 
 
-var enumerate = function(tree) {
-    var elts = [];
-    if (tree === EMPTY) { return []; }
-    return enumerate(tree.l).concat([tree.x]).concat(enumerate(tree.r));
-};
+var enumerate = LLRBTree.items;
+
 
 
 var makeMap = LLRBTree.makeMap;
@@ -301,6 +298,13 @@ describe('simple tests',
                  t = t.remove("advisor");
                  value_of(t.get("advisor", function() { return "sk"; }))
                      .should_be("sk");
+
+
+                 value_of(t.items()).should_be([["email", "dyoo@hashcollision.org"],
+                                                ["name", "Danny"],
+                                                ["school", "wpi"]]);
+                 value_of(t.keys()).should_be(["email","name", "school"]);
+                 value_of(t.values()).should_be(["dyoo@hashcollision.org","Danny", "wpi"]);
 
              }
          });

@@ -104,10 +104,33 @@ LLRBTree.makeMap: (Key Key -> number) -> Map
 This Map has the following methods:
 
     put: Key Value -> Map
+
+        Creates a map with the new association.  If there's already a
+        key/value binding, it's replaced.
+
+
     contains: Key -> Boolean
+
+        Returns true if the key's in the Map, false otherwise.
+
     get: Key (-> X) -> (U Key X)
+
+        Lookup.  If the key doesn't exist and a failure function
+        hasn't been provided, raises an error.
+
     remove: Key -> Map
+
+        Creates a map without the key/value binding.  If there's no
+        key/value binding, the returned tree should be functionally
+        the same.
+
     isEmpty: -> Boolean
+
+        Returns true if the map is empty.
+
+    keys: -> (Arrayof Key)
+
+        Returns all the keys in the map.
 
 all which do the standard associative array operations.  It also has a
 few functions to navigate the tree structure:

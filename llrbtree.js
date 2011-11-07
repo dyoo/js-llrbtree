@@ -48,6 +48,12 @@ var LLRBTree = {};
 
 
 
+    var items = function(tree) {
+        var elts = [];
+        if (tree === EMPTY) { return []; }
+        return items(tree.l).concat([tree.x]).concat(items(tree.r));
+    };
+
 
     // Either returns the element, or undefined if we hit a leaf.
     var find = function(tree, x, cmp) {
@@ -449,6 +455,32 @@ var LLRBTree = {};
         return this.tree === EMPTY;
     };
 
+    Map.prototype.keys = function() {
+        var result = items(this.tree), i;
+        for (i = 0; i < result.length; i++) {
+            result[i] = result[i][0];
+        }
+        return result;
+    };
+
+    Map.prototype.values = function() {
+        var result = items(this.tree), i;
+        for (i = 0; i < result.length; i++) {
+            result[i] = result[i][1];
+        }
+        return result;
+    };
+
+    Map.prototype.items = function() {
+        var result = items(this.tree), i;
+        for (i = 0; i < result.length; i++) {
+            // Make sure to copy so that you can't damage the internal
+            // key/value pairs.
+            result[i] = result[i].slice(0);
+        }
+        return result;
+    };
+
     // Return the color at the tree.
     Map.prototype.color = function() {
         if (this.tree === EMPTY) { return B; }
@@ -489,6 +521,8 @@ var LLRBTree = {};
     LLRBTree.contains = contains;
     LLRBTree.find = find;
     LLRBTree.remove = remove;
+    LLRBTree.items = items;
+
 
     LLRBTree.makeMap = makeMap;
 }());
