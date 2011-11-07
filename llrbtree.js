@@ -148,7 +148,7 @@ var LLRBTree = {};
 
 
     var removeGT = function(kx, c, h, l, x, r, cmp) {
-
+         
     };
 
     var removeEQ = function(kx, c, h, l, x, r, cmp) {

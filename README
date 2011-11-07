@@ -1,5 +1,44 @@
 Functional left-leaning red black trees
 
-A JavaScript implementation based: http://www.mew.org/~kazu/proj/red-black-tree/
+A JavaScript implementation ported from:
+http://www.mew.org/~kazu/proj/red-black-tree/
 
-Danny Yoo (dyoo@cs.wpi.edu)
+
+
+----------------------------------------------------------------------
+
+
+I'm just taking the code from Kazu Yamamoto's implementation:
+
+    https://github.com/kazu-yamamoto/llrbtree
+
+and porting what I need from it to JavaScript.  I don't think I need
+the height or removeMax/removeMin implementations, so I haven't yet
+ported that code over.
+
+
+----------------------------------------------------------------------
+
+Binds LLRBTree as a namespace with the following names:
+
+
+EMPTY : llrbtree
+
+    The empty tree.
+
+
+
+insert : llrbtree X (X X -> Integer) -> llrbtree
+
+    Insert an element into the llrbtree, according to the provided comparator.
+
+
+
+remove: llrbtree X (X X -> Integer) -> llrbtree
+
+    Remove an element from the llrbtree, according to the provided comparator.
+
+
+
+The operations are functional, and should allow me to build a nice
+functional map abstraction out of the pieces.
