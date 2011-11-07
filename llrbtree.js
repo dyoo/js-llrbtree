@@ -3,7 +3,13 @@ var LLRBTree = {};
 // The code basically follows the structure of
 // https://github.com/kazu-yamamoto/llrbtree
 //
+// Mostly comes from the code in:
+//
 // https://github.com/kazu-yamamoto/llrbtree/blob/master/Data/RBTree/LL.hs
+//
+// as well as:
+//
+// https://github.com/kazu-yamamoto/llrbtree/blob/master/Data/RBTree/Internal.hs
 
 (function() {
     'use strict';
@@ -14,7 +20,7 @@ var LLRBTree = {};
     // An rbtree is either a Leaf or a Node.
 
     var Node = function(c, h, l, x, r) {
-        this.c = c; // color: (U RED BLACK)
+        this.c = c; // color: (U R B)
         this.h = h; // height: int
         this.l = l; // left: rbtree
         this.x = x; // x : element
@@ -24,6 +30,24 @@ var LLRBTree = {};
     var Leaf = function() {};
 
     var EMPTY = new Leaf();
+
+
+    // Either returns the element, or undefined if we hit a leaf.
+    var find = function(tree, x, cmp) {
+        while (true) {
+            if (tree instanceof Leaf) { return undefined; }
+            else {
+                var cmpval = cmp(x, tree.x);
+                if (cmpval < 0) {
+                    tree = tree.l;
+                } else if (cmpval > 0) {
+                    tree = tree.r;
+                } else {
+                    return tree.x;
+                }
+            }
+        }
+    };
 
 
     var insert = function(tree, x, cmp) {
@@ -57,7 +81,13 @@ var LLRBTree = {};
     };
 
     var balanceR = function(c, h, l, x, r) {
-        if () {
+        if (c === B &&
+           l instanceof Node && l.c === R &&
+           r instanceof Node && r.c === R) {
+            return new Node(R, h+1, turnB(l), x, turnB(r));
+        } else if (r instanceof Node &&
+                  r.c === R) {
+            return new Node(c, h, new Node(R, r.h, l, x, r.l), r.x, r.r);
         } else {
             return new Node(c, h, l, x, r);
         }
@@ -137,5 +167,13 @@ var LLRBTree = {};
         }
     };
 
+
+
+
+
+    //////////////////////////////////////////////////////////////////////
+    LLRBTree.EMPTY = EMPTY;
+    LLRBTree.insert = insert;
+    LLRBTree.find = find;
 
 }());
