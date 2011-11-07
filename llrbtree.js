@@ -15,7 +15,7 @@ var LLRBTree = {};
     'use strict';
 
     // red and black colors.
-    var R = 0, B = 1;
+    var R = "RED", B = "BLACK";
 
     // An rbtree is either a Leaf or a Node.
 
@@ -178,6 +178,8 @@ var LLRBTree = {};
             return balanceR(c, h, l.l, l.x, remove_(new Node(R, h, l.r, x, r), kx, cmp));
         }
         if (c === R) {
+            isBB = isBlackLeftBlack(r);
+            isBR = isBlackLeftRed(l);
             if (isBB && isBR) {
                 m = minimum(r);
                 return balanceR(R, h, turnB(l.l), l.x, balanceR(B, l.h, l.r, m, removeMin_(turnR(r))));
@@ -188,8 +190,7 @@ var LLRBTree = {};
             }
         }
         if (c === R &&
-            r instanceof Node &&
-            r.c === B) {
+            r instanceof Node && r.c === B) {
             m = minimum(r);
             return new Node(R, h, l, m, new Node(B, r.h, removeMin_(r.l), r.x, r.r));
         }
@@ -200,7 +201,8 @@ var LLRBTree = {};
 
     var removeMin_ = function(t) {
         var h, l, x, r, isBB, isBR;
-        if (t instanceof Node && t.c === R && t.l instanceof Leaf && t.r instanceof Leaf) {
+        if (t instanceof Node && t.c === R && 
+            t.l instanceof Leaf && t.r instanceof Leaf) {
             return EMPTY;
         }
         if (t instanceof Node && t.c === R) {
@@ -217,7 +219,6 @@ var LLRBTree = {};
                 return new Node(r, h, new Node(B, l.h, removeMin(l.l), l.x, l.r), x, r);
             }
         }
-
         throw new Error("removeMin");
     };
 
