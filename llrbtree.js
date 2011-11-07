@@ -1,4 +1,4 @@
-/*jslint vars: true, white: true, nomen: true, maxerr: 50, indent: 4 */
+/*jslint plusplus: true, vars: true, white: true, nomen: true, maxerr: 50, indent: 4 */
 
 var LLRBTree = {};
 
@@ -48,11 +48,22 @@ var LLRBTree = {};
 
 
 
+
+
+
+    var items_ = function(tree, elts) {
+        if (tree === EMPTY) { return; }
+        items_(tree.l, elts);
+        elts.push(tree.x);
+        items_(tree.r, elts);
+    };
+
     var items = function(tree) {
         var elts = [];
-        if (tree === EMPTY) { return []; }
-        return items(tree.l).concat([tree.x]).concat(items(tree.r));
+        items_(tree, elts);
+        return elts;
     };
+
 
 
     // Either returns the element, or undefined if we hit a leaf.

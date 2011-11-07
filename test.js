@@ -155,7 +155,7 @@ describe('simple tests',
                      tree = insertMany(EMPTY, a);
                      var stopTime = new Date();
                      if (window.console) {
-                         console.log(BIG, stopTime-startTime);
+                         window.console.log(BIG, stopTime-startTime);
                      }
                      for (i = 0; i < a.length; i++) {
                          value_of(find(tree, a[i])).should_be(a[i]);
@@ -259,8 +259,8 @@ describe('simple tests',
                          //try {
                              t = remove(t, scrambled[i]);
                          // } catch (e) {
-                         //     console.log(scrambled);
-                         //     console.log(t, scrambled[i]);
+                         //     window.console.log(scrambled);
+                         //     window.console.log(t, scrambled[i]);
                          //     throw e;
                          // }
                      }
