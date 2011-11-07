@@ -14,6 +14,15 @@ var LLRBTree = {};
 (function() {
     'use strict';
 
+    // function declarations
+    var turnR, turnB;
+    var insert_, balanceL, balanceR, replaceX, remove_;
+    var removeLT, removeGT, removeEQ;
+    var isRed, isBlack, isBlackLeftBlack, isBlackLeftRed;
+    var hardMin;
+    var minimum, removeMin_;
+
+
     // red and black colors.
     var R = "RED", B = "BLACK";
 
@@ -50,11 +59,12 @@ var LLRBTree = {};
     };
 
 
+
     var insert = function(tree, x, cmp) {
         return turnB(insert_(tree, x, cmp));
     };
 
-    var insert_ = function(tree, x, cmp) {
+    insert_ = function(tree, x, cmp) {
         var cmpval;
         if (tree instanceof Leaf) {
             return new Node(R, 1, EMPTY, x, EMPTY);
@@ -70,7 +80,7 @@ var LLRBTree = {};
         }
     };
 
-    var balanceL = function(c, h, l, x, r) {
+    balanceL = function(c, h, l, x, r) {
         if (c === B &&
             l instanceof Node && l.c === R 
             && l.l instanceof Node && l.l.c === R) {
@@ -80,7 +90,7 @@ var LLRBTree = {};
         }
     };
 
-    var balanceR = function(c, h, l, x, r) {
+    balanceR = function(c, h, l, x, r) {
         if (c === B &&
            l instanceof Node && l.c === R &&
            r instanceof Node && r.c === R) {
@@ -108,7 +118,7 @@ var LLRBTree = {};
         }
     };
 
-    var remove_ = function(tree, x, cmp) {
+    remove_ = function(tree, x, cmp) {
         var cmpval;
         if (tree instanceof Leaf) { 
             return tree; 
@@ -124,7 +134,7 @@ var LLRBTree = {};
         }
     };
 
-    var removeLT = function(kx, c, h, l, x, r, cmp) {
+    removeLT = function(kx, c, h, l, x, r, cmp) {
         var isBB;
         var isBR;
         if (c === R) {
@@ -144,7 +154,7 @@ var LLRBTree = {};
     };
 
 
-    var removeGT = function(kx, c, h, l, x, r, cmp) {
+    removeGT = function(kx, c, h, l, x, r, cmp) {
         var isBB, isBR;
         if (l instanceof Node && l.c === R) {
             return balanceR(c, h, l.l, l.x, remove_(new Node(R, h, l.r, x, r), kx, cmp));
@@ -169,7 +179,7 @@ var LLRBTree = {};
         throw new Error("removeGT");
     };
 
-    var removeEQ = function(kx, c, h, l, x, r, cmp) {
+    removeEQ = function(kx, c, h, l, x, r, cmp) {
         var isBB, isBR, m;
         if (c === R && l instanceof Leaf && r instanceof Leaf) {
             return EMPTY;
@@ -199,7 +209,7 @@ var LLRBTree = {};
     };
 
 
-    var removeMin_ = function(t) {
+    removeMin_ = function(t) {
         var h, l, x, r, isBB, isBR;
         if (t instanceof Node && t.c === R && 
             t.l instanceof Leaf && t.r instanceof Leaf) {
@@ -216,22 +226,22 @@ var LLRBTree = {};
             } else if (isBB) {
                 return balanceR(B, h-1, removeMin_(turnR(l)), x, turnR(r));
             } else {
-                return new Node(r, h, new Node(B, l.h, removeMin(l.l), l.x, l.r), x, r);
+                return new Node(r, h, new Node(B, l.h, removeMin_(l.l), l.x, l.r), x, r);
             }
         }
         throw new Error("removeMin");
     };
 
 
-    var hardMin = function(t) {
+    hardMin = function(t) {
         if (t instanceof Node && t.c === R &&
             t.r instanceof Node && t.r.c === B &&
             t.r.l instanceof Node && t.r.l.c === R) {
             return new Node(R,
-                            h, 
-                            new Node(B, r.h, removeMin_(turnR(l)), x, r.l.l), 
-                            r.l.x,
-                            new Node(B, r.h, r.l.r, r.x, r.r));
+                            t.h, 
+                            new Node(B, t.r.h, removeMin_(turnR(t.l)), t.x, t.r.l.l), 
+                            t.r.l.x,
+                            new Node(B, t.r.h, t.r.l.r, t.r.x, t.r.r));
         }
         throw new Error("hardMin");
     };
@@ -241,37 +251,37 @@ var LLRBTree = {};
     //////////////////////////////////////////////////////////////////////
 
     // turnB: llrbtree -> llrbtree
-    var turnB = function(tree) {
-        if (tree instanceof Leaf) { throw new Error("turnB"); };
+    turnB = function(tree) {
+        if (tree instanceof Leaf) { throw new Error("turnB"); }
         return new Node(B, tree.h, tree.l, tree.x, tree.r);
     };
 
     // turnR: llrbtree -> llrbtree
-    var turnR = function(tree) {
-        if (tree instanceof Leaf) { throw new Error("turnR"); };
+    turnR = function(tree) {
+        if (tree instanceof Leaf) { throw new Error("turnR"); }
         return new Node(R, tree.h, tree.l, tree.x, tree.r);
     };
 
     // turnR: llrbtree x -> llrbtree
-    var replaceX = function(tree, x) {
-        if (tree instanceof Leaf) { throw new Error("replaceElt"); };
+    replaceX = function(tree, x) {
+        if (tree instanceof Leaf) { throw new Error("replaceElt"); }
         return new Node(tree.c, tree.h, tree.l, x, tree.r);
     };
 
     // isBlack: llrbtree -> boolean
-    var isBlack = function(tree) {
+    isBlack = function(tree) {
         if (tree instanceof Leaf) { return true; }
         return tree.c === B;
     };
 
     // isRed: llrbtree -> boolean
-    var isRed = function(tree) {
+    isRed = function(tree) {
         if (tree instanceof Leaf) { return false; }
         return tree.c === R;
     };
 
     // isBlackLeftBlack: llrbtree -> boolean
-    var isBlackLeftBlack = function(tree) {
+    isBlackLeftBlack = function(tree) {
         if (tree instanceof Node) {
             if (tree.c === B) {
                 if (tree.l instanceof Leaf) {
@@ -289,7 +299,7 @@ var LLRBTree = {};
 
 
     // isBlackLeftRed: llrbtree -> boolean
-    var isBlackLeftRed = function(tree) {
+    isBlackLeftRed = function(tree) {
         if (tree instanceof Node) {
             if (tree.c === B) {
                 if (tree.l instanceof Node) {
@@ -308,7 +318,7 @@ var LLRBTree = {};
 
     // minimum: llrbtree -> X
     // Returns the minimum element in the tree.
-    var minimum = function(tree) {
+    minimum = function(tree) {
         if (tree instanceof Leaf) { throw new Error("minimum"); }
         while(true) {
             if (tree.l instanceof Leaf) { 
