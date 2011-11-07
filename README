@@ -14,39 +14,79 @@ I'm taking the code from Kazu Yamamoto's implementation:
 
     https://github.com/kazu-yamamoto/llrbtree
 
-and porting what I need from it to JavaScript.  I don't think I need
-the height or removeMax/removeMin implementations, so I haven't yet
-ported that code over.
+and porting what I need from it to JavaScript.  It's not a complete
+port: I don't think I need the height or removeMax/removeMin
+implementations, so I haven't yet ported that code over.
+
+
+The library provides a high-level interface in terms of a Map class,
+and a lower-level interface in terms of functions.
+
+
+Example of Map usage:
+
+    // The following creates a map with the default key comparator
+    // that uses string comparison.
+    var t = LLRBTree.makeMap();
+    t.isEmpty(); // true
+
+    t = t.put("name", "Danny");
+    t.isEmpty(); // false
+
+    t.get("name"); // "Danny"
+    t.get("email", 
+          function() { return "???"; }); // "???"
+
+    t = t.put("email", "dyoo@hashcollision.org");
+    t.get("email", 
+          function() { return "???"; }); // "dyoo@hashcollision.org"
+
+    t = t.remove("email");
+    t.get("email", 
+          function() { return "???"; }); // "???"
+
+
+All operations are functional.
+
+
 
 
 ----------------------------------------------------------------------
 
-Binds LLRBTree as a namespace with the following names:
+
+Low level API.
 
 
-EMPTY : llrbtree
-
-    The empty tree.
+The name 'LLRBTree' is bound as a namespace with the following names:
 
 
+LLRBTree.EMPTY : llrbtree
 
-insert : llrbtree X (X X -> Integer) -> llrbtree
+    The empty left-leaning red-black tree.
+
+
+
+LLRBTree.insert : llrbtree X (X X -> Integer) -> llrbtree
 
     Insert an element into the llrbtree, according to the provided comparator.
 
 
-remove: llrbtree X (X X -> Integer) -> llrbtree
+LLRBTree.remove: llrbtree X (X X -> Integer) -> llrbtree
 
     Remove an element from the llrbtree, according to the provided comparator.
 
-find: llrbtree X (X X -> Integer) -> (U X undefined)
+LLRBTree.find: llrbtree X (X X -> Integer) -> (U X undefined)
 
     Look for an element in the llrbtree.  Returns undefined if we can't find it.
 
-contains: llrbtree X (X X -> Integer) -> Boolean
+LLRBTree.contains: llrbtree X (X X -> Integer) -> Boolean
 
     Returns true if the element's in the llrbtree, false otherwise.
 
+
+
+----------------------------------------------------------------------
+High level Map API.
 
 
 The operations are functional, and should allow me to build a nice
@@ -54,12 +94,14 @@ functional map abstraction out of the pieces.  I have a sample
 implementation of such an associative array in the LLRBTree.makeMap
 function:
 
-makeMap: (Key Key -> number) -> Map
+LLRBTree.makeMap: (Key Key -> number) -> Map
 
-    Returns a Map object, using the key comparator to order the
-    nodes in the internal tree.
+    Returns a Map object, using the key comparator to order the nodes
+    in the internal tree.  If the comparator isn't provided, uses a
+    default one that compares the keys lexicographically by string
+    representation.
 
-The Map has the following methods:
+This Map has the following methods:
 
     put: Key Value -> Map
     contains: Key -> Boolean
@@ -67,9 +109,8 @@ The Map has the following methods:
     remove: Key -> Map
     isEmpty: -> Boolean
 
-all which do the standard associative array operations, but in a
-functional way.  It also has a few functions to navigate the tree
-structure:
+all which do the standard associative array operations.  It also has a
+few functions to navigate the tree structure:
 
     left: -> Map
     right: -> Map
