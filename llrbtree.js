@@ -94,10 +94,65 @@ var LLRBTree = {};
     };
 
 
+    var remove = function(tree, x, cmp) {
+        var removed;
+        if (tree instanceof Leaf) { 
+            return tree; 
+        } else {
+            removed = remove_(tree, x, cmp);
+            if (removed instanceof Leaf) {
+                return removed;
+            } else {
+                return turnB(removed);
+            }
+        }
+    };
 
-    // var remove = function(rbtree, elt, cmp) {
-    // };
+    var remove_ = function(tree, x, cmp) {
+        var cmpval;
+        if (tree instanceof Leaf) { 
+            return tree; 
+        } else {
+            cmpval = cmp(x, tree.x);
+            if (cmpval < 0) {
+                return removeLT(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
+            } else if (cmpval > 0) { 
+                return removeGT(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
+            } else {
+                return removeEQ(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
+            }
+        }
+    };
 
+    var removeLT = function(kx, c, h, l, x, r, cmp) {
+        var isBB;
+        var isBR;
+        if (c === R &&
+            r instanceof Node && r.c === B &&
+            r.l instanceof Node &&
+            r.l.c === R) {
+            isBB = isBlackLeftBlack(l);
+            isBR = isBlackLeftRed(r);
+            if (isBB && isBR) {
+                return new Node(R,
+                                h,
+                                new Node(B, r.h, remove_(kx, turnR(l), cmp), x, r.l.l),
+                                r.l.x,
+                                new Node(B, r.h, r.l.r, r.x, r.r));
+            } else if (isBB) {
+                return balanceR(B, h-1, remove_(kx, turnR(l), cmp), x, turnR(r));
+            }
+        }
+        return new Node(c, h, remove_(kx, l, cmp) x r);
+    };
+
+
+    var removeGT = function(kx, c, h, l, x, r, cmp) {
+
+    };
+
+    var removeEQ = function(kx, c, h, l, x, r, cmp) {
+    };
 
 
     //////////////////////////////////////////////////////////////////////
@@ -175,5 +230,6 @@ var LLRBTree = {};
     LLRBTree.EMPTY = EMPTY;
     LLRBTree.insert = insert;
     LLRBTree.find = find;
+    LLRBTree.remove = remove;
 
 }());
