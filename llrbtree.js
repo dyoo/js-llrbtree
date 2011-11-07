@@ -1,3 +1,5 @@
+/*jslint vars: true, white: true, nomen: true, maxerr: 50, indent: 4 */
+
 var LLRBTree = {};
 
 // The code basically follows the structure of

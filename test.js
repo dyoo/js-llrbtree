@@ -14,6 +14,15 @@ var perms = function(a) {
     return results;
 };
 
+var insertBetween = function(x, lst) {
+    var results = [], i;
+    for (i = 0; i <= lst.length; i++) {
+        results.push(lst.slice(0, i).concat([x]).concat(lst.slice(i)));
+    }
+    return results;
+};
+
+
 
 var shuffle = function(array) {
     var tmp, current, top = array.length;
@@ -211,19 +220,27 @@ describe('simple tests',
                  value_of(enumerate(remove(t, 3))).should_be([1, 2, 4, 5]);
                  value_of(enumerate(remove(t, 4))).should_be([1, 2, 3, 5]);
                  value_of(enumerate(remove(t, 5))).should_be([1, 2, 3, 4]);
-             }
+             },
+
+
+             'removing all permutations': function() {
+                 var t = insertMany(EMPTY, [1, 2, 3, 4, 5, 6, 7, 8]);
+                 var scrambled = perms([1, 2, 3, 4, 5, 6, 7, 8]);
+
+                 var i, j, t2, perm;
+                 for (i = 0; i < scrambled.length; i++) {
+                     t2 = t;
+                     perm = scrambled[i]
+                     for (j = 0; j < perm.length; j++) {
+                         t2 = remove(t2, perm[j]);
+                     }
+                     value_of(t2).should_be(EMPTY);
+                 }
+                 
+             },
 
          });
 
-
-
-
-
-
-
-
-// insert all the letter of the alphabet, then delete them in random
-// order.  See that nothing breaks.  Do this repeatedly.
 
 
 
