@@ -75,16 +75,19 @@ var LLRBTree = {};
         } else {
             cmpval = cmp(x, tree.x);
             if (cmpval < 0) {
-                return balanceL(tree.c, tree.h, insert_(tree.l, x, cmp), tree.x, tree.r);
+                return balanceL(tree.c,// tree.h, 
+                                insert_(tree.l, x, cmp), tree.x, tree.r);
             } else if (cmpval > 0) {
-                return balanceR(tree.c, tree.h, tree.l, tree.x, insert_(tree.r, x, cmp));
+                return balanceR(tree.c,// tree.h,
+                                tree.l, tree.x, insert_(tree.r, x, cmp));
             } else {
                 return replaceX(tree, x);
             }
         }
     };
 
-    balanceL = function(c, h, l, x, r) {
+    balanceL = function(c,// h,
+                        l, x, r) {
         if (c === B &&
             l instanceof Node && l.c === R 
             && l.l instanceof Node && l.l.c === R) {
@@ -97,7 +100,8 @@ var LLRBTree = {};
         }
     };
 
-    balanceR = function(c, h, l, x, r) {
+    balanceR = function(c,// h,
+                        l, x, r) {
         if (c === B &&
            l instanceof Node && l.c === R &&
            r instanceof Node && r.c === R) {
@@ -136,16 +140,20 @@ var LLRBTree = {};
         } else {
             cmpval = cmp(x, tree.x);
             if (cmpval < 0) {
-                return removeLT(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
+                return removeLT(x, tree.c,// tree.h,
+                                tree.l, tree.x, tree.r, cmp);
             } else if (cmpval > 0) { 
-                return removeGT(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
+                return removeGT(x, tree.c,// tree.h,
+                                tree.l, tree.x, tree.r, cmp);
             } else {
-                return removeEQ(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
+                return removeEQ(x, tree.c,// tree.h,
+                                tree.l, tree.x, tree.r, cmp);
             }
         }
     };
 
-    removeLT = function(kx, c, h, l, x, r, cmp) {
+    removeLT = function(kx, c,// h,
+                        l, x, r, cmp) {
         var isBB;
         var isBR;
         if (c === R) {
@@ -160,7 +168,8 @@ var LLRBTree = {};
                                 new Node(B,// r.h,
                                          r.l.r, r.x, r.r));
             } else if (isBB) {
-                return balanceR(B, h-1, remove_(turnR(l), kx, cmp), x, turnR(r));
+                return balanceR(B,// h-1,
+                                remove_(turnR(l), kx, cmp), x, turnR(r));
             }
         }
         return new Node(c,// h,
@@ -168,10 +177,12 @@ var LLRBTree = {};
     };
 
 
-    removeGT = function(kx, c, h, l, x, r, cmp) {
+    removeGT = function(kx, c,// h,
+                        l, x, r, cmp) {
         var isBB, isBR;
         if (l instanceof Node && l.c === R) {
-            return balanceR(c, h, l.l, l.x, remove_(new Node(R,// h,
+            return balanceR(c,// h,
+                            l.l, l.x, remove_(new Node(R,// h,
                                                              l.r, x, r), kx, cmp));
         }
         if (c === R) {
@@ -182,10 +193,12 @@ var LLRBTree = {};
                                 //h,
                                 turnB(l.l), 
                                 l.x, 
-                                balanceR(B, l.h, l.r, x, remove_(turnR(r), kx, cmp)));
+                                balanceR(B,// l.h,
+                                         l.r, x, remove_(turnR(r), kx, cmp)));
             } 
             if (isBB) {
-                return balanceR(B, h-1, turnR(l), x, remove_(turnR(r), kx, cmp));
+                return balanceR(B,// h-1,
+                                turnR(l), x, remove_(turnR(r), kx, cmp));
             }
         }
         if (c === R) {
@@ -195,13 +208,15 @@ var LLRBTree = {};
         throw new Error("removeGT");
     };
 
-    removeEQ = function(kx, c, h, l, x, r, cmp) {
+    removeEQ = function(kx, c,// h,
+                        l, x, r, cmp) {
         var isBB, isBR, m;
         if (c === R && l instanceof Leaf && r instanceof Leaf) {
             return EMPTY;
         }
         if (l instanceof Node && l.c === R) {
-            return balanceR(c, h, l.l, l.x, remove_(new Node(R,// h,
+            return balanceR(c,// h,
+                            l.l, l.x, remove_(new Node(R,// h,
                                                              l.r, x, r), kx, cmp));
         }
         if (c === R) {
@@ -209,11 +224,14 @@ var LLRBTree = {};
             isBR = isBlackLeftRed(l);
             if (isBB && isBR) {
                 m = minimum(r);
-                return balanceR(R, h, turnB(l.l), l.x, balanceR(B, l.h, l.r, m, removeMin_(turnR(r))));
+                return balanceR(R,// h,
+                                turnB(l.l), l.x, balanceR(B,// l.h,
+                                                          l.r, m, removeMin_(turnR(r))));
             }
             if (isBB) {
                 m = minimum(r);
-                return balanceR(B, h-1, turnR(l), m, removeMin_(turnR(r)));
+                return balanceR(B,// h-1,
+                                turnR(l), m, removeMin_(turnR(r)));
             }
         }
         if (c === R &&
@@ -228,13 +246,15 @@ var LLRBTree = {};
 
 
     removeMin_ = function(t) {
-        var h, l, x, r, isBB, isBR;
+        // var h;
+        var l, x, r, isBB, isBR;
         if (t instanceof Node && t.c === R && 
             t.l instanceof Leaf && t.r instanceof Leaf) {
             return EMPTY;
         }
         if (t instanceof Node && t.c === R) {
-            h = t.h; l = t.l; x = t.x; r = t.r;
+            //h = t.h;
+            l = t.l; x = t.x; r = t.r;
             isBB = isBlackLeftBlack(l);
             isBR = isBlackLeftRed(r);
             if (isRed(l)) {
@@ -243,7 +263,8 @@ var LLRBTree = {};
             } else if (isBB && isBR) {
                 return hardMin(t);
             } else if (isBB) {
-                return balanceR(B, h-1, removeMin_(turnR(l)), x, turnR(r));
+                return balanceR(B,// h-1,
+                                removeMin_(turnR(l)), x, turnR(r));
             } else {
                 return new Node(R,// h,
                                 new Node(B,// l.h,
@@ -389,7 +410,7 @@ var LLRBTree = {};
         return x[1];
     };
 
-    Map.prototype.remove = function(x, key) {
+    Map.prototype.remove = function(key) {
         return new Map(this.cmp,
                        remove(this.tree, [key, undefined], this.cmp));
     };
