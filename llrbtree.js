@@ -66,6 +66,21 @@ var LLRBTree = {};
         }
     };
 
+    var contains = function(tree, x, cmp) {
+        while (true) {
+            if (tree === EMPTY) { return false; }
+            else {
+                var cmpval = cmp(x, tree.x);
+                if (cmpval < 0) {
+                    tree = tree.l;
+                } else if (cmpval > 0) {
+                    tree = tree.r;
+                } else {
+                    return true;
+                }
+            }
+        }
+    };
 
 
     var insert = function(tree, x, cmp) {
@@ -409,6 +424,10 @@ var LLRBTree = {};
                        insert(this.tree, [key, val], this.cmp));
     };
 
+    Map.prototype.contains = function(key) {
+        return contains(this.tree, [key, undefined], this.cmp);
+    };
+
     var defaultOnFail = function() { 
         throw new Error("lookup failed"); 
     }; 
@@ -467,6 +486,7 @@ var LLRBTree = {};
     //////////////////////////////////////////////////////////////////////
     LLRBTree.EMPTY = EMPTY;
     LLRBTree.insert = insert;
+    LLRBTree.contains = contains;
     LLRBTree.find = find;
     LLRBTree.remove = remove;
 

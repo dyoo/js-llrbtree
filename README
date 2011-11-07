@@ -35,12 +35,37 @@ insert : llrbtree X (X X -> Integer) -> llrbtree
     Insert an element into the llrbtree, according to the provided comparator.
 
 
-
 remove: llrbtree X (X X -> Integer) -> llrbtree
 
     Remove an element from the llrbtree, according to the provided comparator.
 
+find: llrbtree X (X X -> Integer) -> (U X undefined)
+
+    Look for an element in the llrbtree.  Returns undefined if we can't find it.
+
+contains: llrbtree X (X X -> Integer) -> Boolean
+
+    Returns true if the element's in the llrbtree, false otherwise.
+
 
 
 The operations are functional, and should allow me to build a nice
-functional map abstraction out of the pieces.
+functional map abstraction out of the pieces.  I have a sample
+implementation of such an associative array in the LLRBTree.makeMap
+function:
+
+makeMap: (key key -> number) -> Map
+
+    Returns a Map with the following methods:
+
+    put: key value -> Map
+    contains: key -> Boolean
+    get: key (-> X) -> (U key X)
+    remove: key -> Map
+
+    with some functions specifically to navigate the tree structure:
+
+    isEmpty: -> Boolean
+    left: -> Map
+    right: -> Map
+    color: -> (U "R" "B")

@@ -60,6 +60,10 @@ var find = function(tree, n) {
     return LLRBTree.find(tree, n, numcmp);
 };
 
+var contains = function(tree, n) {
+    return LLRBTree.contains(tree, n, numcmp);
+};
+
 var numcmp = function(x, y) { 
     if (x < y) { return -1; }
     if (x > y) { return 1; }
@@ -82,10 +86,12 @@ describe('simple tests',
          {
              'empty test': function() {
                  value_of(find(EMPTY, 0)).should_be(undefined);
+                 value_of(contains(EMPTY, 0)).should_be(false);
              },
 
              'insert single element': function() {
                  value_of(find(insert(EMPTY, 0), 0)).should_be(0);
+                 value_of(contains(insert(EMPTY, 0), 0)).should_be(true);
              },
 
              'inserting repeatedly should be fine': function() {
