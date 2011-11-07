@@ -26,7 +26,7 @@ var LLRBTree = {};
 
 
     // red and black colors.
-    var R = "RED", B = "BLACK";
+    var R = "R", B = "B";
 
     // An rbtree is either a Leaf or a Node.
 
@@ -39,9 +39,14 @@ var LLRBTree = {};
         this.r = r; // right: rbtree
     };
 
-    var Leaf = function() {};
 
+
+    var Leaf = function() {};
+    // WARNING: DO NOT CONSTRUCT ANY OTHER INSTANCES OF LEAF, OR BAD
+    // THINGS WILL HAPPEN.
     var EMPTY = new Leaf();
+
+
 
 
     // Either returns the element, or undefined if we hit a leaf.

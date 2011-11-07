@@ -267,13 +267,23 @@ describe('simple tests',
 
              'simple map test': function() {
                  var t = makeMap();
+                 value_of(t.isEmpty()).should_be(true);
                  t = t.put("name", "Danny");
+                 value_of(t.isEmpty()).should_be(false);
+                 value_of(t.key()).should_be("name");
+                 value_of(t.val()).should_be("Danny");
+                 value_of(t.left().isEmpty()).should_be(true);
+                 value_of(t.right().isEmpty()).should_be(true);
                  value_of(t.get("name")).should_be("Danny");
                  value_of(t.get("school", 
                                 function() { return "brown"; }))
                      .should_be("brown");
                  t = t.put("email", "dyoo@hashcollision.org");
+                 value_of(t.left().isEmpty()).should_be(false);
+                 value_of(t.right().isEmpty()).should_be(true);
                  t = t.put("school", "wpi");
+                 value_of(t.left().isEmpty()).should_be(false);
+                 value_of(t.right().isEmpty()).should_be(false);
                  value_of(t.get("name")).should_be("Danny");
                  value_of(t.get("email")).should_be("dyoo@hashcollision.org");
                  value_of(t.get("school")).should_be("wpi");
@@ -285,5 +295,6 @@ describe('simple tests',
                  t = t.remove("advisor");
                  value_of(t.get("advisor", function() { return "sk"; }))
                      .should_be("sk");
+
              }
          });
