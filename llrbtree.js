@@ -127,10 +127,7 @@ var LLRBTree = {};
     var removeLT = function(kx, c, h, l, x, r, cmp) {
         var isBB;
         var isBR;
-        if (c === R &&
-            r instanceof Node && r.c === B &&
-            r.l instanceof Node &&
-            r.l.c === R) {
+        if (c === R) {
             isBB = isBlackLeftBlack(l);
             isBR = isBlackLeftRed(r);
             if (isBB && isBR) {
@@ -152,9 +149,7 @@ var LLRBTree = {};
         if (l instanceof Node && l.c === R) {
             return balanceR(c, h, l.l, l.x, remove_(kx, new Node(R, h, l.r, x, r), cmp));
         }
-        if (c === R &&
-            l instanceof Node && l.c === B &&
-            l.l instanceof Node && l.l.c === R) {
+        if (c === R) {
             isBB = isBlackLeftBlack(r);
             isBR = isBlackLeftRed(l);
             if (isBB && isBR) {
@@ -182,9 +177,7 @@ var LLRBTree = {};
         if (l instanceof Node && l.c === R) {
             return balanceR(c, h, l.l, l.x, remove_(kx, new Node(R, h, l.r, x, r), cmp));
         }
-        if (c === R &&
-            l instanceof Node && l.c === B && 
-            l.l instanceof Node && l.l.c === R) {
+        if (c === R) {
             if (isBB && isBR) {
                 m = minimum(r);
                 return balanceR(R, h, turnB(l.l), l.x, balanceR(B, l.h, l.r, m, removeMin_(turnR(r))));
@@ -210,8 +203,7 @@ var LLRBTree = {};
         if (t instanceof Node && t.c === R && t.l instanceof Leaf && t.r instanceof Leaf) {
             return EMPTY;
         }
-        if (t instanceof Node && t.c === R &&
-            l instanceof Node && l.c === B) {
+        if (t instanceof Node && t.c === R) {
             h = t.h; l = t.l; x = t.x; r = t.r;
             isBB = isBlackLeftBlack(l);
             isBR = isBlackLeftRed(r);
