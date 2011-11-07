@@ -47,7 +47,7 @@ var LLRBTree = {};
     // Either returns the element, or undefined if we hit a leaf.
     var find = function(tree, x, cmp) {
         while (true) {
-            if (tree instanceof Leaf) { return undefined; }
+            if (tree === EMPTY) { return undefined; }
             else {
                 var cmpval = cmp(x, tree.x);
                 if (cmpval < 0) {
@@ -69,7 +69,7 @@ var LLRBTree = {};
 
     insert_ = function(tree, x, cmp) {
         var cmpval;
-        if (tree instanceof Leaf) {
+        if (tree === EMPTY) {
             return new Node(R, //1,
                             EMPTY, x, EMPTY);
         } else {
@@ -89,8 +89,8 @@ var LLRBTree = {};
     balanceL = function(c,// h,
                         l, x, r) {
         if (c === B &&
-            l instanceof Node && l.c === R 
-            && l.l instanceof Node && l.l.c === R) {
+            l !== EMPTY && l.c === R 
+            && l.l !== EMPTY && l.l.c === R) {
             return new Node(R,// h+1,
                             turnB(l.l), l.x, new Node(B, //h,
                                                       l.r, x, r));
@@ -103,11 +103,11 @@ var LLRBTree = {};
     balanceR = function(c,// h,
                         l, x, r) {
         if (c === B &&
-           l instanceof Node && l.c === R &&
-           r instanceof Node && r.c === R) {
+           l !== EMPTY && l.c === R &&
+           r !== EMPTY && r.c === R) {
             return new Node(R,// h+1,
                             turnB(l), x, turnB(r));
-        } else if (r instanceof Node &&
+        } else if (r !== EMPTY &&
                   r.c === R) {
             return new Node(c,// h,
                             new Node(R,// r.h,
@@ -121,11 +121,11 @@ var LLRBTree = {};
 
     var remove = function(tree, x, cmp) {
         var removed;
-        if (tree instanceof Leaf) { 
+        if (tree === EMPTY) { 
             return tree; 
         } else {
             removed = remove_(turnR(tree), x, cmp);
-            if (removed instanceof Leaf) {
+            if (removed === EMPTY) {
                 return removed;
             } else {
                 return turnB(removed);
@@ -135,7 +135,7 @@ var LLRBTree = {};
 
     remove_ = function(tree, x, cmp) {
         var cmpval;
-        if (tree instanceof Leaf) { 
+        if (tree === EMPTY) { 
             return tree; 
         } else {
             cmpval = cmp(x, tree.x);
@@ -180,7 +180,7 @@ var LLRBTree = {};
     removeGT = function(kx, c,// h,
                         l, x, r, cmp) {
         var isBB, isBR;
-        if (l instanceof Node && l.c === R) {
+        if (l !== EMPTY && l.c === R) {
             return balanceR(c,// h,
                             l.l, l.x, remove_(new Node(R,// h,
                                                              l.r, x, r), kx, cmp));
@@ -211,10 +211,10 @@ var LLRBTree = {};
     removeEQ = function(kx, c,// h,
                         l, x, r, cmp) {
         var isBB, isBR, m;
-        if (c === R && l instanceof Leaf && r instanceof Leaf) {
+        if (c === R && l === EMPTY && r === EMPTY) {
             return EMPTY;
         }
-        if (l instanceof Node && l.c === R) {
+        if (l !== EMPTY && l.c === R) {
             return balanceR(c,// h,
                             l.l, l.x, remove_(new Node(R,// h,
                                                              l.r, x, r), kx, cmp));
@@ -235,7 +235,7 @@ var LLRBTree = {};
             }
         }
         if (c === R &&
-            r instanceof Node && r.c === B) {
+            r !== EMPTY && r.c === B) {
             m = minimum(r);
             return new Node(R,// h,
                             l, m, new Node(B,// r.h,
@@ -248,11 +248,11 @@ var LLRBTree = {};
     removeMin_ = function(t) {
         // var h;
         var l, x, r, isBB, isBR;
-        if (t instanceof Node && t.c === R && 
-            t.l instanceof Leaf && t.r instanceof Leaf) {
+        if (t !== EMPTY && t.c === R && 
+            t.l === EMPTY && t.r === EMPTY) {
             return EMPTY;
         }
-        if (t instanceof Node && t.c === R) {
+        if (t !== EMPTY && t.c === R) {
             //h = t.h;
             l = t.l; x = t.x; r = t.r;
             isBB = isBlackLeftBlack(l);
@@ -276,9 +276,9 @@ var LLRBTree = {};
 
 
     hardMin = function(t) {
-        if (t instanceof Node && t.c === R &&
-            t.r instanceof Node && t.r.c === B &&
-            t.r.l instanceof Node && t.r.l.c === R) {
+        if (t !== EMPTY && t.c === R &&
+            t.r !== EMPTY && t.r.c === B &&
+            t.r.l !== EMPTY && t.r.l.c === R) {
             return new Node(R,
                             //t.h, 
                             new Node(B,// t.r.h,
@@ -296,42 +296,42 @@ var LLRBTree = {};
 
     // turnB: llrbtree -> llrbtree
     turnB = function(tree) {
-        if (tree instanceof Leaf) { throw new Error("turnB"); }
+        if (tree === EMPTY) { throw new Error("turnB"); }
         return new Node(B, //tree.h,
                         tree.l, tree.x, tree.r);
     };
 
     // turnR: llrbtree -> llrbtree
     turnR = function(tree) {
-        if (tree instanceof Leaf) { throw new Error("turnR"); }
+        if (tree === EMPTY) { throw new Error("turnR"); }
         return new Node(R, //tree.h,
                         tree.l, tree.x, tree.r);
     };
 
     // turnR: llrbtree x -> llrbtree
     replaceX = function(tree, x) {
-        if (tree instanceof Leaf) { throw new Error("replaceElt"); }
+        if (tree === EMPTY) { throw new Error("replaceElt"); }
         return new Node(tree.c, //tree.h,
                         tree.l, x, tree.r);
     };
 
     // isBlack: llrbtree -> boolean
     isBlack = function(tree) {
-        if (tree instanceof Leaf) { return true; }
+        if (tree === EMPTY) { return true; }
         return tree.c === B;
     };
 
     // isRed: llrbtree -> boolean
     isRed = function(tree) {
-        if (tree instanceof Leaf) { return false; }
+        if (tree === EMPTY) { return false; }
         return tree.c === R;
     };
 
     // isBlackLeftBlack: llrbtree -> boolean
     isBlackLeftBlack = function(tree) {
-        if (tree instanceof Node) {
+        if (tree !== EMPTY) {
             if (tree.c === B) {
-                if (tree.l instanceof Leaf) {
+                if (tree.l === EMPTY) {
                     return true;
                 } else {
                     return tree.l.c === B;
@@ -347,9 +347,9 @@ var LLRBTree = {};
 
     // isBlackLeftRed: llrbtree -> boolean
     isBlackLeftRed = function(tree) {
-        if (tree instanceof Node) {
+        if (tree !== EMPTY) {
             if (tree.c === B) {
-                if (tree.l instanceof Node) {
+                if (tree.l !== EMPTY) {
                     return tree.l.c === R;
                 } else {
                     return false;
@@ -366,9 +366,9 @@ var LLRBTree = {};
     // minimum: llrbtree -> X
     // Returns the minimum element in the tree.
     minimum = function(tree) {
-        if (tree instanceof Leaf) { throw new Error("minimum"); }
+        if (tree === EMPTY) { throw new Error("minimum"); }
         while(true) {
-            if (tree.l instanceof Leaf) { 
+            if (tree.l === EMPTY) { 
                 return tree.x;
             }
             tree = tree.l;
@@ -379,13 +379,19 @@ var LLRBTree = {};
 
     //////////////////////////////////////////////////////////////////////
     // This Map makes it easier to use the llrbtree as an associative array.
-
+    // The nodes on the tree are key/value pairs, the comparator of which
+    // focuses only on the key portion of the pair.
+    
     var Map = function(cmp, tree) {
         this.cmp = cmp;
         this.tree = tree;
     };
 
     var makeMap = function(keycmp) {
+        keycmp = keycmp || function(x, y) { var sx = String(x), sy = String(y);
+                                            if (sx < sy) { return -1; }
+                                            if (sx > sy) { return 1; }
+                                            return 0; };
         return new Map(
             function(n1, n2) {
                 return keycmp(n1[0], n2[0]);
@@ -415,12 +421,49 @@ var LLRBTree = {};
                        remove(this.tree, [key, undefined], this.cmp));
     };
 
+    Map.prototype.isEmpty = function() {
+        return this.tree === EMPTY;
+    };
+
+    // Return the color at the tree.
+    Map.prototype.color = function() {
+        if (this.tree === EMPTY) { return B; }
+        return this.tree.c;
+    };
+
+    // Navigate left
+    Map.prototype.left = function() {
+        if (this.tree === EMPTY) { throw new Error("left"); }
+        return new Map(this.cmp, this.tree.l);
+    };
+
+    // Navigate right
+    Map.prototype.right = function() {
+        if (this.tree === EMPTY) { throw new Error("right"); }
+        return new Map(this.cmp, this.tree.r);
+    };
+
+    // Get the key at the tree
+    Map.prototype.key = function() {
+        if (this.tree === EMPTY) { throw new Error("key"); }
+        return this.tree.x[0];
+    };
+
+    // Get the value at the tree.
+    Map.prototype.val = function() {
+        if (this.tree === EMPTY) { throw new Error("val"); }
+        return this.tree.x[1];
+    };
+
+
+
+
 
     //////////////////////////////////////////////////////////////////////
     LLRBTree.EMPTY = EMPTY;
     LLRBTree.insert = insert;
     LLRBTree.find = find;
     LLRBTree.remove = remove;
-    LLRBTree.makeMap = makeMap;
 
+    LLRBTree.makeMap = makeMap;
 }());

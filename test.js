@@ -74,6 +74,8 @@ var enumerate = function(tree) {
 };
 
 
+var makeMap = LLRBTree.makeMap;
+
 
 
 describe('simple tests',
@@ -261,13 +263,27 @@ describe('simple tests',
                      }
                      value_of(t).should_be(EMPTY);
                  }
+             },
+
+             'simple map test': function() {
+                 var t = makeMap();
+                 t = t.put("name", "Danny");
+                 value_of(t.get("name")).should_be("Danny");
+                 value_of(t.get("school", 
+                                function() { return "brown"; }))
+                     .should_be("brown");
+                 t = t.put("email", "dyoo@hashcollision.org");
+                 t = t.put("school", "wpi");
+                 value_of(t.get("name")).should_be("Danny");
+                 value_of(t.get("email")).should_be("dyoo@hashcollision.org");
+                 value_of(t.get("school")).should_be("wpi");
+                 value_of(t.get("advisor", function() { return "sk"; }))
+                     .should_be("sk");
+                 t = t.put("advisor", "kfisler");
+                 value_of(t.get("advisor", function() { return "sk"; }))
+                     .should_be("kfisler");
+                 t = t.remove("advisor");
+                 value_of(t.get("advisor", function() { return "sk"; }))
+                     .should_be("sk");
              }
-
-
-
-
          });
-
-
-
-
