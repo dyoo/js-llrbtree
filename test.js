@@ -58,6 +58,15 @@ var numcmp = function(x, y) {
 };
 
 
+var enumerate = function(tree) {
+    var elts = [];
+    if (tree === EMPTY) { return []; }
+    return enumerate(tree.l).concat([tree.x]).concat(enumerate(tree.r));
+};
+
+
+
+
 describe('simple tests',
          {
              'empty test': function() {
@@ -161,7 +170,16 @@ describe('simple tests',
              'removing element should get us empty': function() {
                  var t = insert(EMPTY, 1);
                  value_of(remove(t, 1)).should_be(EMPTY);
-             }
+             } ,
+
+             'removing element should get us empty': function() {
+                 var t = insertMany(EMPTY, [1, 2, 3, 4, 5]);
+                 value_of(enumerate(remove(t, 1))).should_be([2, 3, 4, 5]);
+                 value_of(enumerate(remove(t, 2))).should_be([1, 3, 4, 5]);
+                 value_of(enumerate(remove(t, 3))).should_be([1, 2, 4, 5]);
+                 value_of(enumerate(remove(t, 4))).should_be([1, 2, 3, 5]);
+                 value_of(enumerate(remove(t, 5))).should_be([1, 2, 3, 4]);
+             },
 
 
          });
