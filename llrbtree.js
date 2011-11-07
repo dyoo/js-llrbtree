@@ -250,7 +250,7 @@ var LLRBTree = {};
             } else if (isBB) {
                 return balanceR(B, h-1, removeMin_(turnR(l)), x, turnR(r));
             } else {
-                return new Node(r,// h,
+                return new Node(R,// h,
                                 new Node(B,// l.h,
                                          removeMin_(l.l), l.x, l.r), x, r);
             }
