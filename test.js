@@ -116,24 +116,23 @@ describe('simple tests',
              'shuffle and test' : function() {
                  var a = [];
                  var i;
-                 var iterations;
                  var tree;
                  var BIG;
                  for (BIG = 1; BIG <= 100000; BIG = BIG * 10) {
                      for (i = 0; i < BIG; i++) {
                          a[i] = i;
                      }
-                     var startTime = new Date();
-                     for (iterations = 0; iterations < 1; iterations++) {
-                         shuffle(a);
 
-                         tree = insertMany(EMPTY, a);
-                         for (i = 0; i < a.length; i++) {
-                             value_of(find(tree, a[i])).should_be(a[i]);
-                         }
-                     } 
+                     shuffle(a);
+                     var startTime = new Date();
+                     tree = insertMany(EMPTY, a);
                      var stopTime = new Date();
-                     console.log(BIG, stopTime-startTime);
+                     if (window.console) {
+                         console.log(BIG, stopTime-startTime);
+                     }
+                     for (i = 0; i < a.length; i++) {
+                         value_of(find(tree, a[i])).should_be(a[i]);
+                     }
                  }
              }
          });
