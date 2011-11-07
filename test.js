@@ -239,6 +239,28 @@ describe('simple tests',
                  
              },
 
+
+             'randomly testing against larger permutations': function() {
+                 var a = [];
+                 var i, j;
+                 for (i = 0; i < 100; i++) {
+                     a.push(i);
+                 }
+                 var ITERATIONS = 10;
+
+                 for (j = 0; j < ITERATIONS; j++) {
+                     var t = insertMany(EMPTY, a);
+                     var scrambled = shuffle(a);
+                     for (i = 0; i < scrambled.length; i++) {
+                         t = remove(t, scrambled[i]);
+                     }
+                     value_of(t).should_be(EMPTY);
+                 }
+             }
+
+
+
+
          });
 
 
