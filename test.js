@@ -15,6 +15,18 @@ var perms = function(a) {
 };
 
 
+var shuffle = function(array) {
+    var tmp, current, top = array.length;
+    if(top) while(--top) {
+        current = Math.floor(Math.random() * (top + 1));
+        tmp = array[current];
+        array[current] = array[top];
+        array[top] = tmp;
+    }
+    return array;
+};
+
+
 
 var EMPTY = LLRBTree.EMPTY;
 var insert = function(tree, n) {
@@ -88,6 +100,25 @@ describe('simple tests',
                  for (i = 0; i < a.length; i++) {
                      value_of(find(tree, a[i])).should_be(a[i]);
                  }
+             },
+
+
+             'shuffle and test' : function() {
+                 var a = [];
+                 var i;
+                 var iterations;
+                 var tree;
+                 var BIG = 100000;
+                 for (i = 0; i < BIG; i++) {
+                     a[i] = i;
+                 }
+                 for (iterations = 0; iterations < 10; iterations++) {
+                     shuffle(a);
+                     tree = insertMany(EMPTY, a);
+                     for (i = 0; i < a.length; i++) {
+                         value_of(find(tree, a[i])).should_be(a[i]);
+                     }
+                 } 
              }
          });
 
