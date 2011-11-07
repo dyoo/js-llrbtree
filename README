@@ -1,14 +1,16 @@
 Functional left-leaning red black trees
 
-A JavaScript implementation ported from:
-http://www.mew.org/~kazu/proj/red-black-tree/
+Danny Yoo (dyoo@hashcollision.org)
+
+
+A JavaScript implementation ported from: http://www.mew.org/~kazu/proj/red-black-tree/
 
 
 
 ----------------------------------------------------------------------
 
 
-I'm just taking the code from Kazu Yamamoto's implementation:
+I'm taking the code from Kazu Yamamoto's implementation:
 
     https://github.com/kazu-yamamoto/llrbtree
 

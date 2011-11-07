@@ -223,12 +223,7 @@ var LLRBTree = {};
                             l, m, new Node(B,// r.h,
                                            removeMin_(r.l), r.x, r.r));
         }
-        try {
-            throw new Error("removeEQ");
-        } catch (e) {
-            console.log(e.stack);
-            throw e;
-        }
+        throw new Error("removeEQ");
     };
 
 
@@ -361,11 +356,50 @@ var LLRBTree = {};
 
 
 
+    //////////////////////////////////////////////////////////////////////
+    // This Map makes it easier to use the llrbtree as an associative array.
+
+    var Map = function(cmp, tree) {
+        this.cmp = cmp;
+        this.tree = tree;
+    };
+
+    var makeMap = function(keycmp) {
+        return new Map(
+            function(n1, n2) {
+                return keycmp(n1[0], n2[0]);
+            },
+            EMPTY);
+    };
+
+    Map.prototype.put = function(key, val) {
+        return new Map(this.cmp,
+                       insert(this.tree, [key, val], this.cmp));
+    };
+
+    var defaultOnFail = function() { 
+        throw new Error("lookup failed"); 
+    }; 
+
+    Map.prototype.get = function(key, onFail) {
+        var x;
+        onFail = onFail || defaultOnFail;
+        x = find(this.tree, [key, undefined], this.cmp);
+        if (x === undefined) { return onFail(); }
+        return x[1];
+    };
+
+    Map.prototype.remove = function(x, key) {
+        return new Map(this.cmp,
+                       remove(this.tree, [key, undefined], this.cmp));
+    };
+
 
     //////////////////////////////////////////////////////////////////////
     LLRBTree.EMPTY = EMPTY;
     LLRBTree.insert = insert;
     LLRBTree.find = find;
     LLRBTree.remove = remove;
+    LLRBTree.makeMap = makeMap;
 
 }());

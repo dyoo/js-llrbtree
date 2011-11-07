@@ -136,7 +136,7 @@ describe('simple tests',
              },
 
 
-             'shuffle and test' : function() {
+             'shuffle and test randomly' : function() {
                  var a = [];
                  var i;
                  var tree;
@@ -145,7 +145,6 @@ describe('simple tests',
                      for (i = 0; i < BIG; i++) {
                          a[i] = i;
                      }
-
                      shuffle(a);
                      var startTime = new Date();
                      tree = insertMany(EMPTY, a);
