@@ -147,10 +147,22 @@ describe('simple tests',
                  value_of(remove(t, 0)).should_be(EMPTY);
              },
 
-             'removing from an empty should be idempotent': function() {
+
+             'removing nonexisting element should do nothing': function() {
+                 var t = insert(EMPTY, 1);
+                 value_of(remove(t, -1)).should_be(insert(EMPTY, 1));
+             },
+
+             'removing nonexisting element should do nothing': function() {
                  var t = insert(EMPTY, 1);
                  value_of(remove(t, 0)).should_be(insert(EMPTY, 1));
+             },
+
+             'removing element should get us empty': function() {
+                 var t = insert(EMPTY, 1);
+                 value_of(remove(t, 1)).should_be(EMPTY);
              }
+
 
          });
 

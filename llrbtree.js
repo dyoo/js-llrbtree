@@ -99,7 +99,7 @@ var LLRBTree = {};
         if (tree instanceof Leaf) { 
             return tree; 
         } else {
-            removed = remove_(tree, x, cmp);
+            removed = remove_(turnR(tree), x, cmp);
             if (removed instanceof Leaf) {
                 return removed;
             } else {
@@ -114,7 +114,6 @@ var LLRBTree = {};
             return tree; 
         } else {
             cmpval = cmp(x, tree.x);
-            console.log(x, tree.x, cmpval)
             if (cmpval < 0) {
                 return removeLT(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
             } else if (cmpval > 0) { 
