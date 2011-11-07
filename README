@@ -1,9 +1,10 @@
-Functional left-leaning red black trees
+Functional left-leaning red black trees in JavaScript
 
 Danny Yoo (dyoo@hashcollision.org)
 
 
-A JavaScript implementation ported from: http://www.mew.org/~kazu/proj/red-black-tree/
+A JavaScript implementation ported from:
+http://www.mew.org/~kazu/proj/red-black-tree/
 
 
 
