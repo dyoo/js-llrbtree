@@ -33,6 +33,11 @@ var insert = function(tree, n) {
     return LLRBTree.insert(tree, n, numcmp);
 };
 
+var remove = function(tree, n) {
+    return LLRBTree.remove(tree, n, numcmp);
+};
+
+
 var insertMany = function(tree, a) {
     var i;
     for (i = 0; i < a.length; i++) {
@@ -134,7 +139,19 @@ describe('simple tests',
                          value_of(find(tree, a[i])).should_be(a[i]);
                      }
                  }
+             },
+
+
+             'removing from an empty should be idempotent': function() {
+                 var t = EMPTY;
+                 value_of(remove(t, 0)).should_be(EMPTY);
+             },
+
+             'removing from an empty should be idempotent': function() {
+                 var t = insert(EMPTY, 1);
+                 value_of(remove(t, 0)).should_be(insert(EMPTY, 1));
              }
+
          });
 
 

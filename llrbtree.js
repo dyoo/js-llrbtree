@@ -114,6 +114,7 @@ var LLRBTree = {};
             return tree; 
         } else {
             cmpval = cmp(x, tree.x);
+            console.log(x, tree.x, cmpval)
             if (cmpval < 0) {
                 return removeLT(x, tree.c, tree.h, tree.l, tree.x, tree.r, cmp);
             } else if (cmpval > 0) { 
@@ -133,21 +134,21 @@ var LLRBTree = {};
             if (isBB && isBR) {
                 return new Node(R,
                                 h,
-                                new Node(B, r.h, remove_(kx, turnR(l), cmp), x, r.l.l),
+                                new Node(B, r.h, remove_(turnR(l), kx, cmp), x, r.l.l),
                                 r.l.x,
                                 new Node(B, r.h, r.l.r, r.x, r.r));
             } else if (isBB) {
-                return balanceR(B, h-1, remove_(kx, turnR(l), cmp), x, turnR(r));
+                return balanceR(B, h-1, remove_(turnR(l), kx, cmp), x, turnR(r));
             }
         }
-        return new Node(c, h, remove_(kx, l, cmp), x,  r);
+        return new Node(c, h, remove_(l, kx, cmp), x,  r);
     };
 
 
     var removeGT = function(kx, c, h, l, x, r, cmp) {
         var isBB, isBR;
         if (l instanceof Node && l.c === R) {
-            return balanceR(c, h, l.l, l.x, remove_(kx, new Node(R, h, l.r, x, r), cmp));
+            return balanceR(c, h, l.l, l.x, remove_(new Node(R, h, l.r, x, r), kx, cmp));
         }
         if (c === R) {
             isBB = isBlackLeftBlack(r);
@@ -157,16 +158,16 @@ var LLRBTree = {};
                                 h,
                                 turnB(l.l), 
                                 l.x, 
-                                balanceR(B, l.h, l.r, x, remove_(kx, turnR(r), cmp)));
+                                balanceR(B, l.h, l.r, x, remove_(turnR(r), kx, cmp)));
             } 
             if (isBB) {
-                return balanceR(B, h-1, turnR(l), x, remove_(kx, turnR(r), cmp));
+                return balanceR(B, h-1, turnR(l), x, remove_(turnR(r), kx, cmp));
             }
         }
         if (c === R) {
-            return new Node(R, h, l, x, remove_(kx, r, cmp));
+            return new Node(R, h, l, x, remove_(r, kx, cmp));
         }
-        throw new Error("deleteGT");
+        throw new Error("removeGT");
     };
 
     var removeEQ = function(kx, c, h, l, x, r, cmp) {
@@ -175,7 +176,7 @@ var LLRBTree = {};
             return EMPTY;
         }
         if (l instanceof Node && l.c === R) {
-            return balanceR(c, h, l.l, l.x, remove_(kx, new Node(R, h, l.r, x, r), cmp));
+            return balanceR(c, h, l.l, l.x, remove_(new Node(R, h, l.r, x, r), kx, cmp));
         }
         if (c === R) {
             if (isBB && isBR) {
@@ -194,7 +195,7 @@ var LLRBTree = {};
             return new Node(R, h, l, m, new Node(B, r.h, removeMin_(r.l), r.x, r.r));
         }
 
-        throw new Error("deleteEQ");
+        throw new Error("removeEQ");
     };
 
 
@@ -218,7 +219,7 @@ var LLRBTree = {};
             }
         }
 
-        throw new Error("deleteMin");
+        throw new Error("removeMin");
     };
 
 
