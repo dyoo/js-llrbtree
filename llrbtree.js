@@ -148,11 +148,101 @@ var LLRBTree = {};
 
 
     var removeGT = function(kx, c, h, l, x, r, cmp) {
-         
+        var isBB, isBR;
+        if (l instanceof Node && l.c === R) {
+            return balanceR(c, h, l.l, l.x, remove_(kx, new Node(R, h, l.r, x, r), cmp));
+        }
+        if (c === R &&
+            l instanceof Node && l.c === B &&
+            l.l instanceof Node && l.l.c === R) {
+            isBB = isBlackLeftBlack(r);
+            isBR = isBlackLeftRed(l);
+            if (isBB && isBR) {
+                return new Node(R, 
+                                h,
+                                turnB(l.l), 
+                                l.x, 
+                                balanceR(B, l.h, l.r, x, remove_(kx, turnR(r), cmp)));
+            } 
+            if (isBB) {
+                return balanceR(B, h-1, turnR(l), x, remove_(kx, turnR(r), cmp));
+            }
+        }
+        if (c === R) {
+            return new Node(R, h, l, x, remove_(kx, r, cmp));
+        }
+        throw new Error("deleteGT");
     };
 
     var removeEQ = function(kx, c, h, l, x, r, cmp) {
+        var isBB, isBR, m;
+        if (c === R && l instanceof Leaf && r instanceof Leaf) {
+            return EMPTY;
+        }
+        if (l instanceof Node && l.c === R) {
+            return balanceR(c, h, l.l, l.x, remove_(kx, new Node(R, h, l.r, x, r), cmp));
+        }
+        if (c === R &&
+            l instanceof Node && l.c === B && 
+            l.l instanceof Node && l.l.c === R) {
+            if (isBB && isBR) {
+                m = minimum(r);
+                return balanceR(R, h, turnB(l.l), l.x, balanceR(B, l.h, l.r, m, removeMin_(turnR(r))));
+            }
+            if (isBB) {
+                m = minimum(r);
+                return balanceR(B, h-1, turnR(l), m, removeMin_(turnR(r)));
+            }
+        }
+        if (c === R &&
+            r instanceof Node &&
+            r.c === B) {
+            m = minimum(r);
+            return new Node(R, h, l, m, new Node(B, r.h, removeMin_(r.l), r.x, r.r));
+        }
+
+        throw new Error("deleteEQ");
     };
+
+
+    var removeMin_ = function(t) {
+        var h, l, x, r, isBB, isBR;
+        if (t instanceof Node && t.c === R && t.l instanceof Leaf && t.r instanceof Leaf) {
+            return EMPTY;
+        }
+        if (t instanceof Node && t.c === R &&
+            l instanceof Node && l.c === B) {
+            h = t.h; l = t.l; x = t.x; r = t.r;
+            isBB = isBlackLeftBlack(l);
+            isBR = isBlackLeftRed(r);
+            if (isRed(l)) {
+                return new Node(R, h, removeMin_(l), x, r);
+            } else if (isBB && isBR) {
+                return hardMin(t);
+            } else if (isBB) {
+                return balanceR(B, h-1, removeMin_(turnR(l)), x, turnR(r));
+            } else {
+                return new Node(r, h, new Node(B, l.h, removeMin(l.l), l.x, l.r), x, r);
+            }
+        }
+
+        throw new Error("deleteMin");
+    };
+
+
+    var hardMin = function(t) {
+        if (t instanceof Node && t.c === R &&
+            t.r instanceof Node && t.r.c === B &&
+            t.r.l instanceof Node && t.r.l.c === R) {
+            return new Node(R,
+                            h, 
+                            new Node(B, r.h, removeMin_(turnR(l)), x, r.l.l), 
+                            r.l.x,
+                            new Node(B, r.h, r.l.r, r.x, r.r));
+        }
+        throw new Error("hardMin");
+    };
+
 
 
     //////////////////////////////////////////////////////////////////////
@@ -222,6 +312,18 @@ var LLRBTree = {};
         }
     };
 
+
+    // minimum: llrbtree -> X
+    // Returns the minimum element in the tree.
+    var minimum = function(tree) {
+        if (tree instanceof Leaf) { throw new Error("minimum"); }
+        while(true) {
+            if (tree.l instanceof Leaf) { 
+                return tree.x;
+            }
+            tree = tree.l;
+        }
+    };
 
 
 
