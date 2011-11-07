@@ -1,0 +1,5 @@
+Functional left-leaning red black trees
+
+A JavaScript implementation based: http://www.mew.org/~kazu/proj/red-black-tree/
+
+Danny Yoo (dyoo@cs.wpi.edu)
