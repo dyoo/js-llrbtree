@@ -143,7 +143,7 @@ var LLRBTree = {};
                 return balanceR(B, h-1, remove_(kx, turnR(l), cmp), x, turnR(r));
             }
         }
-        return new Node(c, h, remove_(kx, l, cmp) x r);
+        return new Node(c, h, remove_(kx, l, cmp), x,  r);
     };
 
 
@@ -273,7 +273,7 @@ var LLRBTree = {};
 
     // isRed: llrbtree -> boolean
     var isRed = function(tree) {
-        if (tree instanceof Leaf) { return true; }
+        if (tree instanceof Leaf) { return false; }
         return tree.c === R;
     };
 
